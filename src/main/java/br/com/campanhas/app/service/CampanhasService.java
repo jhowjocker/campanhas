@@ -1,7 +1,6 @@
 package br.com.campanhas.app.service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,8 @@ import br.com.campanhas.app.repository.CampanhasRepository;
 import br.com.campanhas.app.request.CampanhasRequest;
 import br.com.campanhas.app.response.BaseResponse;
 import br.com.campanhas.app.response.CampanhasResponse;
+import br.com.campanhas.app.spec.CampanhaSpec;
+import br.com.campanhas.app.spec.CampanhasList;
 
 @Service
 public class CampanhasService {
@@ -65,5 +66,55 @@ public class CampanhasService {
 		return response;
 
 	}
+	
+	public CampanhasList listar() {
+
+		List<Campanhas> lista = repository.findAll();
+
+		CampanhasList response = new CampanhasList();
+		response.setCampanhas(lista);;
+		response.statusCode = 200;
+		response.message = "Conta obtida com sucesso!";
+
+		return response;
+	}
+	
+	public BaseResponse atualizar(Long id, CampanhaSpec campanhaSpec) {
+		Campanhas campanhas = new Campanhas();
+		BaseResponse base = new BaseResponse();
+		base.statusCode = 400;
+		
+		campanhas.setId(id);
+		campanhas.setNome(campanhaSpec.getNome());
+		campanhas.setDataInicio(campanhaSpec.getDataInicio());
+		campanhas.setDataFim(campanhaSpec.getDataFim());
+		
+		
+		repository.save(campanhas);
+		base.statusCode = 200;
+		base.message = "Dados inseridos com sucesso!";
+		return base;
+	}
+	
+	public BaseResponse deletar(Long id) {
+		BaseResponse response = new BaseResponse();
+		
+		repository.deleteById(id);
+		response.statusCode = 200;
+		return response;
+	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
