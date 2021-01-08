@@ -39,7 +39,7 @@ public class CampanhasController {
 			return ResponseEntity.status(response.statusCode).body(response);
 
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro: Campanha não cadastrada!");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro: Tente novamente!");
 		}
 	}
 

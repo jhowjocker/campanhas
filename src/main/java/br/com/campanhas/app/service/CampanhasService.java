@@ -20,19 +20,44 @@ public class CampanhasService {
 	CampanhasRepository repository;
 
 	public BaseResponse inserir(CampanhasRequest request) {
+		BaseResponse baseResponse = new BaseResponse();
 		Campanhas camp = new Campanhas();
-
+		baseResponse.statusCode = 400;
+		
+					
+	boolean validaNome = verificaNome(request);
+		if (validaNome) {
+			adicionaNome();
+		baseResponse.message = "Campanha existente. Tente novamente!";
+		return baseResponse;
+		
+		}
+		
 		boolean valida = verifica(request);
 		if (valida) {
 			acrescentaDia();
 		}
+		
+		
 		camp.setNome(request.getNome());
 		camp.setDataInicio(request.getDataInicio());
 		camp.setDataFim(request.getDataFim());
 
 		repository.save(camp);
 		return new BaseResponse(201, "Campanha inserida com sucesso!");
+		
+		
+}
 
+
+	public Boolean verificaNome(CampanhasRequest campanhas) {
+		List<Campanhas> nomeOk = repository.findAll();
+		for (Campanhas validaNome : nomeOk) {
+			if (validaNome.getNome().equals(campanhas.getNome())) {
+				return true;
+			
+			}
+		}return false;
 	}
 
 	public boolean verifica(CampanhasRequest campanhas) {
@@ -57,6 +82,19 @@ public class CampanhasService {
 
 		return nova;
 	}
+	
+	
+	public List<Campanhas> adicionaNome() {
+		List<Campanhas> nova = new ArrayList<>();
+		List<Campanhas> geral = repository.findAll();
+		for (Campanhas seleciona : geral) {
+			seleciona.setNome(seleciona.getNome());
+			Campanhas save = repository.save(seleciona);
+		}
+
+		return nova;
+	}
+	
 
 	public List<Campanhas> listar() {
 		BaseResponse response = new BaseResponse();
