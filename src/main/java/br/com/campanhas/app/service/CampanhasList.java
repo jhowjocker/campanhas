@@ -1,4 +1,4 @@
-package br.com.campanhas.app.spec;
+package br.com.campanhas.app.service;
 
 import java.util.List;
 
