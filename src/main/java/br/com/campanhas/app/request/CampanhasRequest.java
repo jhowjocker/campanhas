@@ -7,7 +7,18 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class CampanhasRequest {
 	
 private String nome;
-	
+
+private long idClube;
+
+
+public long getIdClube() {
+	return idClube;
+}
+
+public void setIdClube(long idClube) {
+	this.idClube = idClube;
+}
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate dataInicio;
 	

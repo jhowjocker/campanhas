@@ -1,7 +1,6 @@
 package br.com.campanhas.app.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.campanhas.app.model.Campanhas;
 import br.com.campanhas.app.repository.CampanhasRepository;
+import br.com.campanhas.app.repository.ClubeRepository;
 import br.com.campanhas.app.request.CampanhasRequest;
 import br.com.campanhas.app.response.BaseResponse;
-import br.com.campanhas.app.service.CampanhasList;
 import br.com.campanhas.app.service.CampanhasService;
 
 @RestController
@@ -31,6 +30,9 @@ public class CampanhasController {
 
 	@Autowired
 	private CampanhasRepository repository;
+	
+	@Autowired
+	private ClubeRepository _repository;
 
 	@PostMapping
 	public ResponseEntity inserir(@RequestBody CampanhasRequest request) {

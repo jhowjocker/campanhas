@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.campanhas.app.model.Campanhas;
+import br.com.campanhas.app.model.Clube;
 import br.com.campanhas.app.repository.CampanhasRepository;
+import br.com.campanhas.app.repository.ClubeRepository;
 import br.com.campanhas.app.request.CampanhasRequest;
+import br.com.campanhas.app.request.ClubeRequest;
 import br.com.campanhas.app.response.BaseResponse;
 
 @Service
@@ -19,45 +22,64 @@ public class CampanhasService {
 	@Autowired
 	CampanhasRepository repository;
 
+	@Autowired
+	ClubeRepository _repository;
+
 	public BaseResponse inserir(CampanhasRequest request) {
 		BaseResponse baseResponse = new BaseResponse();
 		Campanhas camp = new Campanhas();
 		baseResponse.statusCode = 400;
-		
-					
-	boolean validaNome = verificaNome(request);
+
+		boolean validaNome = verificaNome(request);
 		if (validaNome) {
-			adicionaNome();
-		baseResponse.message = "Campanha existente. Tente novamente!";
-		return baseResponse;
-		
+			alteraNome();
+			baseResponse.message = "Campanha existente. Tente outro nome!";
+			return baseResponse;
+
 		}
-		
+					
+		boolean validaId = verificaId(request);
+		if (validaId) {
+			adicionaId();
+			
+		}
+
 		boolean valida = verifica(request);
 		if (valida) {
-			acrescentaDia();
+			adicionaDia();
 		}
-		
-		
+
 		camp.setNome(request.getNome());
+		//camp.setClube(request.getIdClube());
 		camp.setDataInicio(request.getDataInicio());
 		camp.setDataFim(request.getDataFim());
-
+		
+		
 		repository.save(camp);
 		return new BaseResponse(201, "Campanha inserida com sucesso!");
-		
-		
-}
 
+	}
 
 	public Boolean verificaNome(CampanhasRequest campanhas) {
 		List<Campanhas> nomeOk = repository.findAll();
 		for (Campanhas validaNome : nomeOk) {
 			if (validaNome.getNome().equals(campanhas.getNome())) {
 				return true;
-			
+
 			}
-		}return false;
+		}
+		return false;
+	}
+
+	public Boolean verificaId(CampanhasRequest clube) {
+		List<Clube> lista = _repository.findAll();
+		for (Clube validaId : lista) {
+			if (validaId.getId().equals(clube.getIdClube())) {
+				return true;
+
+			}
+		}
+		return false;
 	}
 
 	public boolean verifica(CampanhasRequest campanhas) {
@@ -72,19 +94,7 @@ public class CampanhasService {
 		return false;
 	}
 
-	public List<Campanhas> acrescentaDia() {
-		List<Campanhas> nova = new ArrayList<>();
-		List<Campanhas> geral = repository.findAll();
-		for (Campanhas seleciona : geral) {
-			seleciona.setDataFim(seleciona.getDataFim().plusDays(1));
-			Campanhas save = repository.save(seleciona);
-		}
-
-		return nova;
-	}
-	
-	
-	public List<Campanhas> adicionaNome() {
+	public List<Campanhas> alteraNome() {
 		List<Campanhas> nova = new ArrayList<>();
 		List<Campanhas> geral = repository.findAll();
 		for (Campanhas seleciona : geral) {
@@ -94,7 +104,32 @@ public class CampanhasService {
 
 		return nova;
 	}
+
 	
+	
+	public List<Clube> adicionaId() {
+
+		List<Clube> nova = new ArrayList<>();
+		List<Clube> geral = _repository.findAll();
+		for (Clube seleciona : geral) {
+			seleciona.setId(seleciona.getId());
+			Clube save = _repository.save(seleciona);
+
+		}
+
+		return nova;
+	}
+
+	public List<Campanhas> adicionaDia() {
+		List<Campanhas> nova = new ArrayList<>();
+		List<Campanhas> geral = repository.findAll();
+		for (Campanhas seleciona : geral) {
+			seleciona.setDataFim(seleciona.getDataFim().plusDays(1));
+			Campanhas save = repository.save(seleciona);
+		}
+
+		return nova;
+	}
 
 	public List<Campanhas> listar() {
 		BaseResponse response = new BaseResponse();
