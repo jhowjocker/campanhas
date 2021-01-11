@@ -4,51 +4,18 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.Data;
+
+@Data
 public class CampanhasRequest {
+
+	private String nome;
 	
-private String nome;
-
-private long idClube;
-
-
-public long getIdClube() {
-	return idClube;
-}
-
-public void setIdClube(long idClube) {
-	this.idClube = idClube;
-}
-
+	private String time;
+	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate dataInicio;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate dataFim;
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public LocalDate getDataInicio() {
-		return dataInicio;
-	}
-
-	public void setDataInicio(LocalDate dataInicio) {
-		this.dataInicio = dataInicio;
-	}
-
-	public LocalDate getDataFim() {
-		return dataFim;
-	}
-
-	public void setDataFim(LocalDate dataFim) {
-		this.dataFim = dataFim;
-	}
-	
-	
-
 }

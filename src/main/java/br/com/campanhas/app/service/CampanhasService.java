@@ -3,65 +3,63 @@ package br.com.campanhas.app.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestController;
 
 import br.com.campanhas.app.model.Campanhas;
 import br.com.campanhas.app.model.Clube;
 import br.com.campanhas.app.repository.CampanhasRepository;
 import br.com.campanhas.app.repository.ClubeRepository;
 import br.com.campanhas.app.request.CampanhasRequest;
-import br.com.campanhas.app.request.ClubeRequest;
 import br.com.campanhas.app.response.BaseResponse;
 
 @Service
 public class CampanhasService {
 
 	@Autowired
-	CampanhasRepository repository;
+	private CampanhasRepository campanhaRepository;
 
 	@Autowired
-	ClubeRepository _repository;
+	private ClubeRepository clubeRepository;
 
-	public BaseResponse inserir(CampanhasRequest request) {
+	public BaseResponse inserir(CampanhasRequest campanhaRequest) {
 		BaseResponse baseResponse = new BaseResponse();
 		Campanhas camp = new Campanhas();
 		baseResponse.statusCode = 400;
 
-		boolean validaNome = verificaNome(request);
+		boolean validaNome = verificaNome(campanhaRequest);
 		if (validaNome) {
-			alteraNome();
 			baseResponse.message = "Campanha existente. Tente outro nome!";
 			return baseResponse;
 
 		}
-					
-		boolean validaId = verificaId(request);
-		if (validaId) {
-			adicionaId();
-			
-		}
 
-		boolean valida = verifica(request);
+		boolean valida = verifica(campanhaRequest);
 		if (valida) {
 			adicionaDia();
 		}
 
-		camp.setNome(request.getNome());
-		//camp.setClube(request.getIdClube());
-		camp.setDataInicio(request.getDataInicio());
-		camp.setDataFim(request.getDataFim());
-		
-		
-		repository.save(camp);
+		Clube clube = clubeRepository.findByNome(campanhaRequest.getTime());
+
+		if (clube == null) {
+			baseResponse.message = "Nome do time não existe!";
+			return baseResponse;
+		}
+
+		camp.setNome(campanhaRequest.getNome());
+		camp.setClube(clube);
+		camp.setDataInicio(campanhaRequest.getDataInicio());
+		camp.setDataFim(campanhaRequest.getDataFim());
+
+		campanhaRepository.save(camp);
 		return new BaseResponse(201, "Campanha inserida com sucesso!");
 
 	}
 
 	public Boolean verificaNome(CampanhasRequest campanhas) {
-		List<Campanhas> nomeOk = repository.findAll();
+		List<Campanhas> nomeOk = campanhaRepository.findAll();
 		for (Campanhas validaNome : nomeOk) {
 			if (validaNome.getNome().equals(campanhas.getNome())) {
 				return true;
@@ -71,61 +69,23 @@ public class CampanhasService {
 		return false;
 	}
 
-	public Boolean verificaId(CampanhasRequest clube) {
-		List<Clube> lista = _repository.findAll();
-		for (Clube validaId : lista) {
-			if (validaId.getId().equals(clube.getIdClube())) {
-				return true;
-
-			}
-		}
-		return false;
-	}
-
 	public boolean verifica(CampanhasRequest campanhas) {
-		List<Campanhas> geral = repository.findAll();
+		List<Campanhas> geral = campanhaRepository.findAll();
 		for (Campanhas seleciona : geral) {
 			if (seleciona.getDataFim().equals(campanhas.getDataFim())) {
 				return true;
 			}
-
 		}
 
 		return false;
 	}
 
-	public List<Campanhas> alteraNome() {
-		List<Campanhas> nova = new ArrayList<>();
-		List<Campanhas> geral = repository.findAll();
-		for (Campanhas seleciona : geral) {
-			seleciona.setNome(seleciona.getNome());
-			Campanhas save = repository.save(seleciona);
-		}
-
-		return nova;
-	}
-
-	
-	
-	public List<Clube> adicionaId() {
-
-		List<Clube> nova = new ArrayList<>();
-		List<Clube> geral = _repository.findAll();
-		for (Clube seleciona : geral) {
-			seleciona.setId(seleciona.getId());
-			Clube save = _repository.save(seleciona);
-
-		}
-
-		return nova;
-	}
-
 	public List<Campanhas> adicionaDia() {
 		List<Campanhas> nova = new ArrayList<>();
-		List<Campanhas> geral = repository.findAll();
+		List<Campanhas> geral = campanhaRepository.findAll();
 		for (Campanhas seleciona : geral) {
 			seleciona.setDataFim(seleciona.getDataFim().plusDays(1));
-			Campanhas save = repository.save(seleciona);
+			Campanhas save = campanhaRepository.save(seleciona);
 		}
 
 		return nova;
@@ -135,10 +95,10 @@ public class CampanhasService {
 		BaseResponse response = new BaseResponse();
 
 		List<Campanhas> atual = new ArrayList<>();
-		List<Campanhas> lista = repository.findAll();
+		List<Campanhas> lista = campanhaRepository.findAll();
 		for (Campanhas campanhas : lista) {
 			if (campanhas.getDataFim().isAfter(LocalDate.now())) {
-				Campanhas save = repository.save(campanhas);
+				Campanhas save = campanhaRepository.save(campanhas);
 				atual.add(save);
 
 			}
@@ -161,7 +121,7 @@ public class CampanhasService {
 		campanhas.setDataInicio(campanhaSpec.getDataInicio());
 		campanhas.setDataFim(campanhaSpec.getDataFim());
 
-		repository.save(campanhas);
+		campanhaRepository.save(campanhas);
 		base.statusCode = 200;
 		base.message = "Dados alterados com sucesso!";
 		return base;
@@ -170,7 +130,7 @@ public class CampanhasService {
 	public BaseResponse deletar(Long id) {
 		BaseResponse response = new BaseResponse();
 
-		repository.deleteById(id);
+		campanhaRepository.deleteById(id);
 		response.statusCode = 200;
 		response.message = "Dados excluidos com sucesso!";
 		return response;

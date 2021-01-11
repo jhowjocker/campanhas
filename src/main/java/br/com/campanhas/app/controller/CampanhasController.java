@@ -30,7 +30,7 @@ public class CampanhasController {
 
 	@Autowired
 	private CampanhasRepository repository;
-	
+
 	@Autowired
 	private ClubeRepository _repository;
 

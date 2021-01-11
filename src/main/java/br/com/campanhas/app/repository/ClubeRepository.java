@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import br.com.campanhas.app.model.Clube;
 
 @Repository
-public interface ClubeRepository extends  JpaRepository<Clube,Long> {
-	
+public interface ClubeRepository extends JpaRepository<Clube, Long> {
 
-	}
+	public Clube findByNome(String time);
+}
