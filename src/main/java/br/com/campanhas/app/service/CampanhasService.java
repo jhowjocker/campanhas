@@ -111,20 +111,29 @@ public class CampanhasService {
 		return atual;
 	}
 
-	public BaseResponse atualizar(Long id, Campanhas campanhaSpec) {
+	public BaseResponse atualizar(Long id, CampanhasRequest campanhasRequest) {
 		Campanhas campanhas = new Campanhas();
-		BaseResponse base = new BaseResponse();
-		base.statusCode = 400;
+		BaseResponse baseResponse = new BaseResponse();
+		baseResponse.statusCode = 400;
+		
+		Clube clube = clubeRepository.findByNome(campanhasRequest.getTime());
 
+		if (clube == null) {
+			baseResponse.message = "Nome do time não existe!";
+			return baseResponse;
+		}
+		
 		campanhas.setId(id);
-		campanhas.setNome(campanhaSpec.getNome());
-		campanhas.setDataInicio(campanhaSpec.getDataInicio());
-		campanhas.setDataFim(campanhaSpec.getDataFim());
+		campanhas.setNome(campanhasRequest.getNome());
+		campanhas.setClube(clube);
+		campanhas.setDataInicio(campanhasRequest.getDataInicio());
+		campanhas.setDataFim(campanhasRequest.getDataFim());
 
 		campanhaRepository.save(campanhas);
-		base.statusCode = 200;
-		base.message = "Dados alterados com sucesso!";
-		return base;
+		baseResponse.statusCode = 200;
+		baseResponse.message = "Dados alterados com sucesso!";
+		return baseResponse;
+
 	}
 
 	public BaseResponse deletar(Long id) {

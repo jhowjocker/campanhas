@@ -57,10 +57,10 @@ public class CampanhasController {
 	}
 
 	@PutMapping(path = "/{id}")
-	public ResponseEntity atualizar(@RequestBody Campanhas campanhaSpec, @PathVariable Long id) {
+	public ResponseEntity atualizar(@RequestBody CampanhasRequest campanhas, @PathVariable Long id) {
 
 		try {
-			BaseResponse response = service.atualizar(id, campanhaSpec);
+			BaseResponse response = service.atualizar(id, campanhas);
 			return ResponseEntity.status(response.statusCode).body(response);
 
 		} catch (Exception e) {
