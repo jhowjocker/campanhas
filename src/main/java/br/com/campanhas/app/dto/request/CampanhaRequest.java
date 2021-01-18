@@ -1,4 +1,4 @@
-package br.com.campanhas.app.request;
+package br.com.campanhas.app.dto.request;
 
 import java.time.LocalDate;
 
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 @Data
-public class CampanhasRequest {
+public class CampanhaRequest {
 
 	private String nome;
 	

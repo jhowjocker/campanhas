@@ -1,12 +1,12 @@
-package br.com.campanhas.app.repository;
+package br.com.campanhas.app.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.campanhas.app.model.Clube;
+import br.com.campanhas.app.entities.Clube;
 
 @Repository
 public interface ClubeRepository extends JpaRepository<Clube, Long> {
 
-	public Clube findByNome(String time);
+	public Clube findByNomeIgnoreCase(String time);
 }

@@ -1,8 +1,4 @@
-package br.com.campanhas.app.request;
-
-import java.util.List;
-
-import br.com.campanhas.app.model.Clube;
+package br.com.campanhas.app.dto.request;
 
 public class ClubeRequest {
 	

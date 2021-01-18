@@ -1,4 +1,4 @@
-package br.com.campanhas.app.infrastructure.rest.configuration;
+package br.com.campanhas.app.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

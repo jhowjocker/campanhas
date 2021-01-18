@@ -2,18 +2,18 @@ package br.com.campanhas.app.configs;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 
-import br.com.campanhas.app.model.Clube;
-import br.com.campanhas.app.repository.ClubeRepository;
+import br.com.campanhas.app.entities.Clube;
+import br.com.campanhas.app.repositories.ClubeRepository;
 
 @Configuration
+@RequiredArgsConstructor
 public class InicializationConfig {
-	
-	@Autowired
-	private ClubeRepository clubeRepository;
-	
+
+	private final ClubeRepository clubeRepository;
+
 	@PostConstruct
 	public void inicializacao() {
 		
